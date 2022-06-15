@@ -1,111 +1,163 @@
-<!-- Code from d3-graph-gallery.com -->
 <!DOCTYPE html>
-<meta charset="utf-8" />
-<body onload="populateTable()">
-  <!-- Load d3.js -->
-  <script src="https://d3js.org/d3.v4.js"></script>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/4/journal/bootstrap.min.css"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css"
+      rel="stylesheet"
+    />
+    <title>CSC3007 Assignment 2</title>
+  </head>
+  <body onload="populateTable()">
+    <script src="https://d3js.org/d3.v4.js"></script>   
+    <div class="container"><div class="row mt-12">
+        <div class="container" style="margin-top: 3%">
+          <h1 style="text-align: center">CSC3007 Assignment 2</h1>             
+          <button type="button" class="btn btn-primary dropdown-toggle" data-mdb-toggle="dropdown" aria-expanded="false">
+            Select Year
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="update(data_2011)">2011</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2012)">2012</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2013)">2013</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2014)">2014</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2015)">2015</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2016)">2016</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2017)">2017</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2018)">2018</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2019)">2019</a></li>
+            <li><a class="dropdown-item" href="#" onclick="update(data_2020)">2020</a></li>
 
-  <!-- Add 2 buttons -->
-  <button onclick="update(data_2011)">2011</button>
-  <button onclick="update(data_2012)">2012</button>
-  <button onclick="update(data_2013)">2013</button>
-  <button onclick="update(data_2014)">2014</button>
-  <button onclick="update(data_2015)">2015</button>
-  <button onclick="update(data_2016)">2016</button>
-  <button onclick="update(data_2017)">2017</button>
-  <button onclick="update(data_2018)">2018</button>
-  <button onclick="update(data_2019)">2019</button>
-  <button onclick="update(data_2020)">2020</button>
+          </ul>
+          <div class="container" style="margin-top: 1%;" id="my_dataviz">
 
-  <!-- Create a div where the graph will take place -->
-  <div id="my_dataviz"></div>
-</body>
-<script>
-  async function populateTable() {
-    let response = await fetch(
-      "https://data.gov.sg/api/action/datastore_search?resource_id=83c21090-bd19-4b54-ab6b-d999c251edcf"
-    );
-    let data = await response.json();
-    var yearlyData = data.result.records;
+   <!-- contents of the  -->
+          </div>
+        </div>
+      </div></div>
+      <script>
+        async function populateTable() {
+          let response = await fetch(
+            "https://data.gov.sg/api/action/datastore_search?resource_id=83c21090-bd19-4b54-ab6b-d999c251edcf"
+          );
+          let data = await response.json();
+          var yearlyData = data.result.records;
+      
+          // console.log(yearlyData)
+          data_2011 = yearlyData.filter((e) => e.year == "2011");
+          data_2012 = yearlyData.filter((e) => e.year == "2012");
+          data_2013 = yearlyData.filter((e) => e.year == "2013");
+          data_2014 = yearlyData.filter((e) => e.year == "2014");
+          data_2015 = yearlyData.filter((e) => e.year == "2015");
+          data_2016 = yearlyData.filter((e) => e.year == "2016");
+          data_2017 = yearlyData.filter((e) => e.year == "2017");
+          data_2018 = yearlyData.filter((e) => e.year == "2018");
+          data_2019 = yearlyData.filter((e) => e.year == "2019");
+          data_2020 = yearlyData.filter((e) => e.year == "2020");
+      
+          // Initialize the plot with the first dataset
 
-    // console.log(yearlyData)
-    data_2011 = yearlyData.filter((e) => e.year == "2011");
-    data_2012 = yearlyData.filter((e) => e.year == "2012");
-    data_2013 = yearlyData.filter((e) => e.year == "2013");
-    data_2014 = yearlyData.filter((e) => e.year == "2014");
-    data_2015 = yearlyData.filter((e) => e.year == "2015");
-    data_2016 = yearlyData.filter((e) => e.year == "2016");
-    data_2017 = yearlyData.filter((e) => e.year == "2017");
-    data_2018 = yearlyData.filter((e) => e.year == "2018");
-    data_2019 = yearlyData.filter((e) => e.year == "2019");
-    data_2020 = yearlyData.filter((e) => e.year == "2020");
 
-    // Initialize the plot with the first dataset
+          (margin = { top: 30, right: 30, bottom: 70, left: 60 }),
+            (width = 1000 - margin.left - margin.right),
+            (height = 400 - margin.top - margin.bottom);
+      
+          // append the svg object to the body of the page
+          svg = d3
+            .select("#my_dataviz")
+            .append("svg")
+            .attr("viewBox", `0 0 1000 400`)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      
+          // Initialize the X axis
+          x = d3.scaleBand().range([0, width]).padding(0.2);
+          xAxis = svg.append("g").attr("transform", "translate(0," + height + ")");
+      
+          // Initialize the Y axis
+          y = d3.scaleLinear().range([height, 0]);
+          yAxis = svg.append("g").attr("class", "myYaxis");
+      
+          update(data_2011);
+        }
+      
+        function update(data) {
+          console.log(data);
+          // Update the X axis
+          x.domain(
+            data.map(function (d) {
+              return d.level_2;
+            })
+          );
+          xAxis.call(d3.axisBottom(x));
+      
+          // Update the Y axis
+          y.domain([
+            0,
+            d3.max(data, function (d) {
+              return d.value;
+            }),
+          ]);
+          yAxis.transition().duration(1000).call(d3.axisLeft(y));
+      
+          // Create the u variable
+          var u = svg.selectAll("rect").data(data);
+      
+          u.enter()
+            .append("rect") // Add a new rect for each new elements
+            .merge(u) // get the already existing elements as well
+            .transition() // and apply changes to all of them
+            .duration(1000)
+            .attr("x", function (d) {
+              return x(d.level_2);
+            })
+            .attr("y", function (d) {
+              return y(d.value);
+            })
+            .attr("width", x.bandwidth())
+            .attr("height", function (d) {
+              return height - y(d.value);
+            })
+            .attr("fill", "#69b3a2");
+      
+          // If less group in the new dataset, I delete the ones not in use anymore
+          u.exit().remove();
+        }
+      </script>
+      
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+      crossorigin="anonymous"
+    ></script>
+    <!-- MDB -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"
+    ></script>
 
-    (margin = { top: 30, right: 30, bottom: 70, left: 60 }),
-      (width = 600 - margin.left - margin.right),
-      (height = 500 - margin.top - margin.bottom);
-
-    // append the svg object to the body of the page
-    svg = d3
-      .select("#my_dataviz")
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    // Initialize the X axis
-    x = d3.scaleBand().range([0, width]).padding(0.2);
-    xAxis = svg.append("g").attr("transform", "translate(0," + height + ")");
-
-    // Initialize the Y axis
-    y = d3.scaleLinear().range([height, 0]);
-    yAxis = svg.append("g").attr("class", "myYaxis");
-
-    update(data_2011);
-  }
-
-  function update(data) {
-    console.log(data);
-    // Update the X axis
-    x.domain(
-      data.map(function (d) {
-        return d.level_2;
-      })
-    );
-    xAxis.call(d3.axisBottom(x));
-
-    // Update the Y axis
-    y.domain([
-      0,
-      d3.max(data, function (d) {
-        return d.value;
-      }),
-    ]);
-    yAxis.transition().duration(1000).call(d3.axisLeft(y));
-
-    // Create the u variable
-    var u = svg.selectAll("rect").data(data);
-
-    u.enter()
-      .append("rect") // Add a new rect for each new elements
-      .merge(u) // get the already existing elements as well
-      .transition() // and apply changes to all of them
-      .duration(1000)
-      .attr("x", function (d) {
-        return x(d.level_2);
-      })
-      .attr("y", function (d) {
-        return y(d.value);
-      })
-      .attr("width", x.bandwidth())
-      .attr("height", function (d) {
-        return height - y(d.value);
-      })
-      .attr("fill", "#69b3a2");
-
-    // If less group in the new dataset, I delete the ones not in use anymore
-    u.exit().remove();
-  }
-</script>
+  </body>
+</html>
